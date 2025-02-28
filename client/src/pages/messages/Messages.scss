@@ -1,58 +1,135 @@
 .messages {
   display: flex;
   justify-content: center;
+  background: linear-gradient(to bottom, #f9f9f9, #e3e6ef);
+  min-height: 100vh;
+  padding: 50px 0;
 
   .container {
-    width: 1400px;
-    padding: 50px 0px;
+    width: 100%;
+    max-width: 1200px;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 
     .title {
-      display: flex;
-      justify-content: space-between;
-
-      button {
-        background-color: #1dbf73;
-        color: white;
-        font-weight: 500;
-        border: none;
-        padding: 10px;
-        cursor: pointer;
-      }
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 24px;
+      font-weight: 600;
+      color: #333;
     }
 
     table {
       width: 100%;
+      border-collapse: collapse;
+      border-radius: 10px;
+      overflow: hidden;
 
-      tr {
-        height: 100px;
+      thead {
+        background: #1dbf73;
+        color: white;
+
+        tr {
+          height: 50px;
+        }
+
         th {
+          padding: 15px;
           text-align: left;
+          font-size: 16px;
+          font-weight: 600;
         }
-        td {
-          padding: 10px;
+      }
 
-          &:first-child {
+      tbody {
+        tr {
+          height: 80px;
+          transition: 0.3s;
+
+          &:hover {
+            background: #f1f5f9;
+          }
+
+          &.active {
+            background: #e3fcec;
+          }
+
+          td {
+            padding: 15px;
+            font-size: 16px;
+            border-bottom: 1px solid #ddd;
+
+            &:nth-child(2),
+            &:nth-child(3) {
+              color: #666;
+            }
+          }
+
+          .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            img {
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              object-fit: cover;
+              box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            }
+
+            h2 {
+              font-size: 16px;
+              font-weight: 600;
+              margin-top: 30px;
+              color: #333;
+            }
+
+            span {
+              font-weight: 500;
+              color: #333;
+            }
+          }
+
+          .link {
+            color: #1dbf73;
+            text-decoration: none;
             font-weight: 500;
-          }
-          
-          &:nth-child(2),
-          &:nth-child(3) {
-            color: gray;
-          }
-        }
+            transition: 0.3s;
 
-        button {
-          background-color: #1dbf73;
-          color: white;
-          padding: 10px;
-          border: none;
-          cursor: pointer;
-        }
+            &:hover {
+              text-decoration: underline;
+            }
+          }
 
-        &.active {
-          background-color: #1dbf730f;
+          button {
+            background: linear-gradient(to right, #1dbf73, #18a558);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.3s;
+            box-shadow: 0px 3px 10px rgba(29, 191, 115, 0.4);
+
+            &:hover {
+              background: linear-gradient(to right, #18a558, #1dbf73);
+              box-shadow: 0px 4px 12px rgba(29, 191, 115, 0.5);
+            }
+          }
         }
       }
     }
+  }
+
+  .loading,
+  .error {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 500;
+    color: #666;
   }
 }

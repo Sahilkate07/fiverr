@@ -11,6 +11,7 @@
   "dependencies": {
     "@stripe/react-stripe-js": "^1.16.4",
     "@stripe/stripe-js": "^1.46.0",
+    "@tailwindcss/vite": "^4.0.4",
     "@tanstack/react-query": "^5",
     "axios": "^1.3.3",
     "infinite-react-carousel": "^1.2.11",
@@ -18,7 +19,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.8.0",
-    "sass": "^1.58.0"
+    "sass": "^1.58.0",
+    "tailwindcss": "^4.0.4"
   },
   "devDependencies": {
     "@types/react": "^18.0.26",

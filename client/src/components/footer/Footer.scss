@@ -24,6 +24,12 @@
         }
         span {
           font-weight: 300;
+
+          &:hover {
+            color: #1dbf73;
+            font-weight: bold;
+            cursor: pointer;
+          }
         }
       }
     }
@@ -43,6 +49,7 @@
         display: flex;
         align-items: center;
         gap: 20px;
+        cursor: pointer;
 
         span {
           font-size: 13px;
@@ -58,12 +65,30 @@
         .social {
           display: flex;
           gap: 20px;
+          align-items: center;
+
+          a {
+            display: flex;
+            align-items: center;
+            transition: transform 0.2s ease;
+
+            &:hover {
+              transform: scale(1.1);
+            }
+
+            img {
+              width: 24px;
+              height: 24px;
+              object-fit: contain;
+            }
+          }
         }
 
         .link {
           display: flex;
           align-items: center;
           gap: 10px;
+          cursor: pointer;
         }
       }
     }

@@ -1,5 +1,4 @@
 export const INITIAL_STATE = {
-  userId: JSON.parse(localStorage.getItem("currentUser"))?._id,
   title: "",
   cat: "",
   cover: "",
@@ -38,7 +37,6 @@ export const gigReducer = (state, action) => {
           (feature) => feature !== action.payload
         ),
       };
-
     default:
       return state;
   }

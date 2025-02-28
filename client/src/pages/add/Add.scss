@@ -1,89 +1,182 @@
 .add {
   display: flex;
   justify-content: center;
+  align-items: center;
+  background: #f3f3f3;
+  min-height: 100vh;
+  padding: 50px 0;
+  color: #333;
+  font-family: 'Inter', sans-serif;
 
   .container {
-    width: 1400px;
-    padding: 50px 0px;
+    width: 900px;
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
 
     h1 {
-      width: max-content;
-      margin-bottom: 30px;
-      color: gray;
-      font-weight: 300;
+      font-size: 32px;
+      color: #222;
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: 700;
     }
 
     .sections {
       display: flex;
-      justify-content: space-between;
-      gap: 100px;
+      flex-direction: column;
+      gap: 25px;
 
       label {
-        color: gray;
-        font-size: 18px;
+        font-weight: 600;
+        color: #444;
+        font-size: 16px;
+        display: block;
+        margin-bottom: 8px;
       }
 
-      .info,
-      .details {
-        flex: 1;
+      .info, .details {
         display: flex;
         flex-direction: column;
-        gap: 10px;
-        justify-content: space-between;
+        gap: 15px;
 
-        input,
-        select,
-        textarea {
-          padding: 20px;
+        input, select, textarea {
+          padding: 14px;
+          border-radius: 10px;
+          border: 1px solid #ccc;
+          background: #fff;
+          color: #333;
+          font-size: 15px;
+          transition: 0.3s ease-in-out;
+          width: 100%;
+
+          &:focus {
+            border-color: #1dbf73;
+            box-shadow: 0 0 10px rgba(29, 191, 115, 0.3);
+          }
         }
 
-        .images{
+        .upload-section {
           display: flex;
+          flex-direction: column;
+          gap: 15px;
           align-items: center;
-          gap: 20px;
-
-          .imagesInputs{
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-          }
-        }
-
-        button {
-          border: none;
-          padding: 20px;
-          color: white;
-          font-weight: 500;
-          font-size: 18px;
-          background-color: #1dbf73;
+          border: 2px dashed #ccc;
+          padding: 25px;
+          border-radius: 12px;
           cursor: pointer;
-        }
+          transition: 0.3s ease-in-out;
+          text-align: center;
 
-        .add{
-          display: flex;
-          justify-content: space-between;
-
-          input{
-            width: 80%;
+          &:hover {
+            border-color: #1dbf73;
+            background: rgba(29, 191, 115, 0.1);
           }
-        }
 
-        .addedFeatures{
-          display: flex;
-          gap: 20px;
-
-          button{
-            height: 30px;
-            font-size: 12px;
-            font-weight: 400;
-            background: transparent;
-            color: red;
-            border: 1px solid red;
+          .upload-btn {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 10px;
+            background: #1dbf73;
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease-in-out;
+            
+            &:hover {
+              background: #17a863;
+            }
           }
         }
+
+        .add-feature {
+          display: flex;
+          gap: 10px;
+          align-items: center;
+
+          input {
+            flex: 1;
+          }
+
+          button {
+            background: #1dbf73;
+            color: white;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s ease-in-out;
+
+            &:hover {
+              background: #17a863;
+            }
+          }
+        }
+
+        .addedFeatures {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+
+          .feature-item {
+            background: #eee;
+            padding: 10px 15px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+
+            button {
+              background: transparent;
+              color: red;
+              border: none;
+              cursor: pointer;
+              font-size: 16px;
+              font-weight: bold;
+              transition: 0.2s ease-in-out;
+
+              &:hover {
+                color: darkred;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Animated Submit Button
+    .submit-btn {
+      background: #1dbf73;
+      color: white;
+      border: none;
+      padding: 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 700;
+      transition: all 0.3s ease-in-out;
+      display: block;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(29, 191, 115, 0.3);
+      margin-top: 20px;
+
+      &:hover {
+        background: #17a863;
+        box-shadow: 0 8px 20px rgba(23, 168, 99, 0.4);
+        transform: translateY(-2px);
+      }
+
+      &:active {
+        transform: scale(0.95);
       }
     }
   }

@@ -4,7 +4,8 @@ const { Schema } = mongoose;
 const OrderSchema = new Schema(
   {
     gigId: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: 'Gig',
       required: true,
     },
     img: {
@@ -13,28 +14,36 @@ const OrderSchema = new Schema(
     },
     title: {
       type: String,
-      required: true,
+      required: false,
     },
     price: {
       type: Number,
       required: true,
     },
     sellerId: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: 'User',
       required: true,
     },
     buyerId: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: 'User',
       required: true,
     },
     isCompleted: {
       type: Boolean,
       default: false,
     },
-    payment_intent: {
+    paymentIntentId: {
       type: String,
       required: true,
+      unique: true,
     },
+    status: {
+      type: String,
+      enum: ['Processing', 'Completed', 'Cancelled'],
+      default: 'Processing'
+    }
   },
   {
     timestamps: true,

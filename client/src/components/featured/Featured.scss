@@ -14,6 +14,7 @@
       display: flex;
       flex-direction: column;
       gap: 30px;
+      width: 100%;
 
       h1 {
         font-size: 50px;
@@ -25,26 +26,35 @@
       }
 
       .search {
+        width: 100%; /* Increased width */
+        max-width: 800px; /* Increased max width */
         background-color: white;
-        border-radius: 5px;
+        border-radius: 50px;
         display: flex;
         align-items: center;
-        justify-content: space-between;
         overflow: hidden;
+        border: 2px solid white;
 
         .searchInput {
           display: flex;
           align-items: center;
           gap: 10px;
+          flex: 1;
+          padding: 0 20px; /* Removed extra padding from top/bottom */
+
           img {
-            width: 20px;
-            height: 20px;
-            margin: 10px;
+            width: 22px;
+            height: 22px;
           }
 
           input {
+            flex: 1;
             border: none;
             outline: none;
+            font-size: 16px;
+            color: black;
+            padding: 15px 0; /* Adjusted padding for full height */
+            background: transparent;
 
             &::placeholder {
               color: gray;
@@ -53,39 +63,61 @@
         }
 
         button {
-          width: 120px;
-          height: 50px;
+          width: 150px;
+          height: 100%; /* Full height */
           border: none;
           background-color: #1dbf73;
           color: white;
-          align-self: flex-end;
+          font-weight: bold;
+          font-size: 16px;
           cursor: pointer;
+          transition: all 0.3s ease-in-out;
+          border-top-right-radius: 50px;
+          border-bottom-right-radius: 50px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          &:hover {
+            background-color: #159b5c;
+          }
         }
       }
 
       .popular {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin-top: 15px;
 
         span {
-          width: max-content;
+          font-weight: bold;
+          font-size: 16px;
         }
 
         button {
-          width: max-content;
           color: white;
-          border: 1px solid white;
-          padding: 5px 10px;
-          border-radius: 20px;
+          border: 2px solid white;
+          padding: 8px 14px;
+          border-radius: 25px;
           background-color: transparent;
           font-size: 14px;
+          cursor: pointer;
+          transition: all 0.3s ease-in-out;
+
+          &:hover {
+            background-color: white;
+            color: #013914;
+            font-weight: bold;
+          }
         }
       }
     }
 
     .right {
       height: 100%;
+
       img {
         height: 100%;
         object-fit: contain;

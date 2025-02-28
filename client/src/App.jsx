@@ -19,6 +19,27 @@ import {
 } from "@tanstack/react-query";
 import Pay from "./pages/pay/Pay";
 import Success from "./pages/success/Success";
+
+// ErrorBoundary component
+class ErrorBoundary extends React.Component {
+  state = { hasError: false };
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, info) {
+    console.error("Error caught in boundary:", error, info);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <div>Oops! Something went wrong.</div>;
+    }
+    return this.props.children;
+  }
+}
+
 function App() {
   const queryClient = new QueryClient();
 
@@ -91,7 +112,11 @@ function App() {
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <ErrorBoundary>
+      <RouterProvider router={router} />
+    </ErrorBoundary>
+  );
 }
 
 export default App;

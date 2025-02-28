@@ -1,59 +1,87 @@
 import Gig from "../models/gig.model.js";
 import createError from "../utils/createError.js";
+import jwt from "jsonwebtoken";
 
+// Create a new gig (Only sellers can create)
 export const createGig = async (req, res, next) => {
-  if (!req.isSeller)
-    return next(createError(403, "Only sellers can create a gig!"));
-
-  const newGig = new Gig({
-    userId: req.userId,
-    ...req.body,
-  });
-
   try {
-    const savedGig = await newGig.save();
-    res.status(201).json(savedGig);
+    // Get user ID from the request (set by verifyToken middleware)
+    if (!req.userId) {
+      return next(createError(403, "You must be authenticated!"));
+    }
+
+    // Check if user is a seller
+    if (!req.isSeller) {
+      return next(createError(403, "Only sellers can create gigs!"));
+    }
+
+    const newGig = new Gig({
+      userId: req.userId,
+      ...req.body,
+    });
+
+    try {
+      const savedGig = await newGig.save();
+      res.status(201).json(savedGig);
+    } catch (err) {
+      next(createError(500, "Failed to save gig: " + err.message));
+    }
   } catch (err) {
     next(err);
   }
 };
+
+// Delete a gig (Only the owner can delete)
 export const deleteGig = async (req, res, next) => {
   try {
     const gig = await Gig.findById(req.params.id);
-    if (gig.userId !== req.userId)
+    if (!gig) {
+      return next(createError(404, "Gig not found!"));
+    }
+    
+    if (gig.userId.toString() !== req.userId) {
       return next(createError(403, "You can delete only your gig!"));
+    }
 
     await Gig.findByIdAndDelete(req.params.id);
-    res.status(200).send("Gig has been deleted!");
+    res.status(200).json({ message: "Gig has been deleted!" });
   } catch (err) {
     next(err);
   }
 };
+
+// Get a single gig by ID
 export const getGig = async (req, res, next) => {
   try {
     const gig = await Gig.findById(req.params.id);
-    if (!gig) next(createError(404, "Gig not found!"));
-    res.status(200).send(gig);
+    if (!gig) {
+      return next(createError(404, "Gig not found!"));
+    }
+    res.status(200).json(gig);
   } catch (err) {
     next(err);
   }
 };
+
+// Get all gigs (Filter by sellerId, category, price, search, etc.)
 export const getGigs = async (req, res, next) => {
-  const q = req.query;
+  const { sellerId, cat, min, max, search, sort } = req.query;
+
   const filters = {
-    ...(q.userId && { userId: q.userId }),
-    ...(q.cat && { cat: q.cat }),
-    ...((q.min || q.max) && {
+    ...(sellerId && { userId: sellerId }), // Filter gigs by seller's user ID
+    ...(cat && { cat }),
+    ...((min || max) && {
       price: {
-        ...(q.min && { $gt: q.min }),
-        ...(q.max && { $lt: q.max }),
+        ...(min && { $gte: min }),
+        ...(max && { $lte: max }),
       },
     }),
-    ...(q.search && { title: { $regex: q.search, $options: "i" } }),
+    ...(search && { title: { $regex: search, $options: "i" } }),
   };
+
   try {
-    const gigs = await Gig.find(filters).sort({ [q.sort]: -1 });
-    res.status(200).send(gigs);
+    const gigs = await Gig.find(filters).sort({ [sort]: -1 });
+    res.status(200).json(gigs);
   } catch (err) {
     next(err);
   }

@@ -1,54 +1,88 @@
 .orders {
   display: flex;
   justify-content: center;
-  color: #555;
-
+  align-items: center;
+  background: #f4f4f4;
+  min-height: 100vh;
+  padding: 40px 0;
+  font-family: 'Inter', sans-serif;
+  
   .container {
-    width: 1400px;
-    padding: 50px 0px;
-
+    width: 90%;
+    max-width: 1200px;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+    
     .title {
-      display: flex;
-      justify-content: space-between;
-
-      button {
-        background-color: #1dbf73;
-        color: white;
-        font-weight: 500;
-        border: none;
-        padding: 10px;
-        cursor: pointer;
-      }
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      color: #333;
     }
 
     table {
       width: 100%;
-
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      
+      th, td {
+        padding: 15px;
+        text-align: left;
+      }
+      
+      th {
+        background: #1dbf73;
+        color: #fff;
+        font-weight: 600;
+      }
+      
       tr {
-        height: 50px;
-        th {
-          text-align: left;
-        }
-        td {
-          
-          sup{
-            font-size: 12px;
-          }
+        cursor: pointer;
 
-          .image {
-            width: 50px;
-            height: 25px;
-            object-fit: cover;
-          }
-
-          .message {
-            width: 25px;
-            cursor: pointer;
-          }
-        }
+        transition: background 0.3s ease-in-out;
         &:nth-child(even) {
-          background-color: #1dbf730f;
+          background: #f9f9f9;
         }
+        &:hover {
+          background: rgba(29, 191, 115, 0.1);
+        }
+      }
+      
+      .image {
+        width: 60px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+        &:hover {
+          transform: scale(1.05);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+      }
+      
+      .message-icon {
+        width: 30px;
+        cursor: pointer;
+        transition: transform 0.2s ease-in-out;
+        &:hover {
+          transform: scale(1.1);
+        }
+      }
+      
+      .no-orders {
+        text-align: center;
+        font-weight: bold;
+        padding: 20px;
+        color: #888;
       }
     }
   }

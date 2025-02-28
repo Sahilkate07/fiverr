@@ -1,17 +1,26 @@
 import React from "react";
 import "./Home.scss";
 import Featured from "../../components/featured/Featured";
-import TrustedBy from "../../components/trustedBy/TrustedBy";
 import Slide from "../../components/slide/Slide";
 import CatCard from "../../components/catCard/CatCard";
 import ProjectCard from "../../components/projectCard/ProjectCard";
 import { cards, projects } from "../../data";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.2 },
+  },
+};
 
 function Home() {
   return (
     <div className="home">
       <Featured />
-      <TrustedBy />
+      {/* <TrustedBy /> */}
+      
       <Slide slidesToShow={5} arrowsScroll={5}>
         {cards.map((card) => (
           <CatCard key={card.id} card={card} />
@@ -42,7 +51,7 @@ function Home() {
               Protected payments, every time
             </div>
             <p>
-              Always know what you'll pay upfront. Your payment isn't released
+              Always know what you will pay upfront. Your payment is not released
               until you approve the work.
             </p>
             <div className="title">
