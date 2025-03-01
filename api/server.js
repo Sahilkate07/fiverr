@@ -20,29 +20,43 @@ const connect = async () => {
     await mongoose.connect(process.env.MONGO);
     console.log("✅ Connected to MongoDB!");
   } catch (error) {
-    console.log(error);
+    console.error("MongoDB connection error:", error);
+    process.exit(1);
   }
 };
 
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+// Middleware
+app.use(cors({ 
+  origin: process.env.CLIENT_URL || "http://localhost:5173",
+  credentials: true 
+}));
 app.use(express.json());
 app.use(cookieParser());
 
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "OK" });
+});
+
+// Routes
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/gigs", gigRoute);
-app.use("/api/orders", orderRoute);  // ✅ Ensure this line exists
+app.use("/api/orders", orderRoute);
 app.use("/api/conversations", conversationRoute);
 app.use("/api/messages", messageRoute);
 app.use("/api/reviews", reviewRoute);
 
+// Error handling middleware
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;
   const errorMessage = err.message || "Something went wrong!";
   return res.status(errorStatus).send(errorMessage);
 });
 
-app.listen(8800, () => {
+const PORT = process.env.PORT || 8800;
+
+app.listen(PORT, () => {
   connect();
-  console.log("🚀 Backend server is running");
+  console.log(`🚀 Backend server is running on port ${PORT}`);
 });
