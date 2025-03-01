@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import newRequest from "../../utils/newRequest";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "./Success.scss";
 
 const Success = () => {
   const [error, setError] = useState(null);

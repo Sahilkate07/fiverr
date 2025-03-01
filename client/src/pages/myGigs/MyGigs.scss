@@ -2,6 +2,9 @@
   display: flex;
   justify-content: center;
   color: #555;
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding: 20px;
 
   .container {
     width: 1400px;
@@ -38,14 +41,53 @@
 
     .loading, .error, .no-gigs {
       text-align: center;
-      padding: 20px;
+      padding: 40px;
       background: white;
       border-radius: 8px;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     }
 
+    .loading {
+      color: #1dbf73;
+    }
+
     .error {
       color: #ff4d4f;
+    }
+
+    .no-gigs {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+
+      p {
+        font-size: 18px;
+        color: #666;
+        margin-bottom: 10px;
+      }
+
+      .create-gig-btn {
+        background-color: #1dbf73;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background: #17a863;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(23, 168, 99, 0.4);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
     }
 
     table {

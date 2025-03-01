@@ -54,6 +54,10 @@ function Gig() {
     retry: 1
   });
 
+  // Check if current user is the seller
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const isOwnGig = currentUser && currentUser._id === gigData?.userId;
+
   const handleContinueClick = () => {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
@@ -71,6 +75,20 @@ function Gig() {
       // Save current page for redirect after login
       localStorage.setItem("redirectAfterLogin", `/gig/${id}`);
       navigate("/login");
+      return;
+    }
+
+    // Check if the current user is the seller of this gig
+    if (currentUser._id === gigData.userId) {
+      toast.error("You cannot purchase your own gig!", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "colored"
+      });
       return;
     }
 
@@ -237,8 +255,17 @@ function Gig() {
               ))}
             </div>
 
-            <button className="continue-button" onClick={handleContinueClick}>
-              Continue
+            <button 
+              className="continue-button" 
+              onClick={handleContinueClick}
+              disabled={isOwnGig}
+              style={{
+                backgroundColor: isOwnGig ? '#e4e5e7' : '#1dbf73',
+                cursor: isOwnGig ? 'not-allowed' : 'pointer'
+              }}
+              title={isOwnGig ? "You cannot purchase your own gig" : "Continue to purchase"}
+            >
+              {isOwnGig ? "Your Own Gig" : "Continue"}
             </button>
           </div>
         </div>

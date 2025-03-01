@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
 import "./Orders.scss";
 import { motion } from "framer-motion";
 import { FiMessageCircle } from "react-icons/fi";
+import { toast } from "react-toastify";
 
 const Orders = () => {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   const navigate = useNavigate();
+  const [loadingContact, setLoadingContact] = useState(null);
 
   const { isLoading, error, data } = useQuery({
     queryKey: ["orders"],
@@ -25,31 +27,33 @@ const Orders = () => {
 
   const handleContact = async (order) => {
     try {
-      // Determine if current user is buyer or seller
-      const isSeller = currentUser.isSeller;
-      const otherUserId = isSeller ? order.buyerId : order.sellerId;
+      setLoadingContact(order._id);
       
-      // Create a unique conversation ID
-      const conversationId = [currentUser._id, otherUserId].sort().join('_');
-
-      // Try to get existing conversation
-      try {
-        const res = await newRequest.get(`/conversations/single/${conversationId}`);
-        navigate(`/message/${res.data.id}`);
-      } catch (err) {
-        // If conversation doesn't exist, create a new one
-        if (err.response?.status === 404) {
-          const res = await newRequest.post(`/conversations`, {
-            to: otherUserId,
-            orderId: order._id
-          });
-          navigate(`/message/${res.data.id}`);
-        } else {
-          console.error("Error handling conversation:", err);
-        }
+      // Determine the other user's ID based on whether current user is buyer or seller
+      const otherUserId = currentUser.isSeller ? order.buyerId : order.sellerId;
+      
+      if (!otherUserId) {
+        toast.error("Cannot find the other user's information.");
+        return;
       }
+
+      // Create or get conversation
+      const res = await newRequest.post(`/conversations`, {
+        to: otherUserId,
+        orderId: order._id
+      });
+
+      if (res.data && res.data.id) {
+        navigate(`/message/${res.data.id}`);
+      } else {
+        toast.error("Failed to create conversation. Please try again.");
+      }
+
     } catch (err) {
-      console.error("Failed to handle contact:", err);
+      console.error("Error creating conversation:", err);
+      toast.error(err.response?.data?.message || "Failed to start conversation");
+    } finally {
+      setLoadingContact(null);
     }
   };
 
@@ -69,9 +73,11 @@ const Orders = () => {
       <div className="container">
         <h1 className="title">Orders</h1>
         {isLoading ? (
-          <div className="loading">Loading...</div>
+          <div className="loading">Loading orders...</div>
         ) : error ? (
-          <div className="error">Error loading orders</div>
+          <div className="error">
+            Error loading orders. Please try refreshing the page.
+          </div>
         ) : (
           <table>
             <thead>
@@ -102,11 +108,20 @@ const Orders = () => {
                     <td>{order.gigId?.title || order.title || "Untitled Order"}</td>
                     <td>${order.price}</td>
                     <td>
-                      <FiMessageCircle 
-                        className="message-icon"
-                        size={24} 
-                        onClick={() => handleContact(order)} 
-                      />
+                      <motion.div
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                      >
+                        <FiMessageCircle 
+                          className={`message-icon ${loadingContact === order._id ? 'loading' : ''}`}
+                          size={24} 
+                          onClick={() => handleContact(order)}
+                          style={{ 
+                            cursor: loadingContact === order._id ? 'wait' : 'pointer',
+                            opacity: loadingContact === order._id ? 0.6 : 1
+                          }}
+                        />
+                      </motion.div>
                     </td>
                   </motion.tr>
                 ))

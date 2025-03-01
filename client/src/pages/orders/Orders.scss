@@ -24,6 +24,24 @@
       color: #333;
     }
 
+    .loading, .error {
+      text-align: center;
+      padding: 30px;
+      font-size: 16px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+
+    .loading {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .error {
+      background: #ffebee;
+      color: #c62828;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -45,11 +63,12 @@
       
       tr {
         cursor: pointer;
-
         transition: background 0.3s ease-in-out;
+        
         &:nth-child(even) {
           background: #f9f9f9;
         }
+        
         &:hover {
           background: rgba(29, 191, 115, 0.1);
         }
@@ -72,9 +91,16 @@
       .message-icon {
         width: 30px;
         cursor: pointer;
-        transition: transform 0.2s ease-in-out;
+        transition: all 0.3s ease-in-out;
+        color: #1dbf73;
+        
         &:hover {
           transform: scale(1.1);
+          color: darken(#1dbf73, 10%);
+        }
+
+        &.loading {
+          animation: pulse 1.5s infinite;
         }
       }
       
@@ -85,5 +111,17 @@
         color: #888;
       }
     }
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
   }
 }

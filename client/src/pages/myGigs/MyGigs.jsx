@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./MyGigs.scss";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -8,33 +8,40 @@ import { FiTrash2, FiExternalLink } from "react-icons/fi";
 
 function MyGigs() {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("currentUser"));
-  const userId = user?._id;
-  const isSeller = user?.isSeller;
-
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   const queryClient = useQueryClient();
 
-  const { isLoading, error, data, refetch } = useQuery({
-    queryKey: ["myGigs"],
-    queryFn: async () => {
-      const response = await newRequest.get("/gigs");
-      return response.data;
-    },
-  });
+  // Redirect if not a seller
+  useEffect(() => {
+    if (!currentUser || !currentUser.isSeller) {
+      toast.error("Only sellers can access this page");
+      navigate("/");
+      return;
+    }
+  }, [currentUser, navigate]);
 
-  const mutation = useMutation({
-    mutationFn: (id) => newRequest.delete(`/gigs/${id}`),
-    onSuccess: () => {
-      toast.success("Gig deleted successfully!");
-      queryClient.invalidateQueries(["myGigs", userId]);
+  const { isLoading, error, data } = useQuery({
+    queryKey: ["myGigs", currentUser?._id],
+    queryFn: async () => {
+      try {
+        // Fetch gigs with userId filter
+        const response = await newRequest.get(`/gigs?userId=${currentUser._id}`);
+        // Filter gigs to only show those created by the current user
+        const filteredGigs = response.data.filter(gig => gig.userId === currentUser._id);
+        return filteredGigs;
+      } catch (err) {
+        console.error("Error fetching gigs:", err);
+        throw new Error(err.response?.data?.message || "Failed to fetch your gigs");
+      }
     },
+    enabled: !!currentUser?._id && currentUser.isSeller,
   });
 
   const handleDelete = async (id) => {
     try {
       await newRequest.delete(`/gigs/${id}`);
       toast.success("Gig deleted successfully!");
-      refetch();
+      queryClient.invalidateQueries(["myGigs", currentUser._id]);
     } catch (err) {
       toast.error(err.response?.data?.message || "Error deleting gig");
     }
@@ -45,28 +52,35 @@ function MyGigs() {
   };
 
   const handleImageError = (gig) => {
-    toast.error(`Failed to load gig image for "${gig.title}"`);
+    console.warn(`Failed to load image for gig: ${gig.title}`);
   };
+
+  if (!currentUser?.isSeller) {
+    return null; // Return null while redirecting
+  }
 
   return (
     <div className="myGigs">
       <div className="container">
         <div className="title">
-          <h1>{isSeller ? "My Gigs" : "My Orders"}</h1>
-          {isSeller && (
-            <Link to="/add">
-              <button>Add New Gig</button>
-            </Link>
-          )}
+          <h1>My Gigs</h1>
+          <Link to="/add">
+            <button>Add New Gig</button>
+          </Link>
         </div>
 
         {isLoading ? (
           <div className="loading">Loading your gigs...</div>
         ) : error ? (
-          <div className="error">Error loading gigs. Please try again later.</div>
+          <div className="error">
+            {error.message || "Error loading gigs. Please try again later."}
+          </div>
         ) : !data?.length ? (
           <div className="no-gigs">
-            <p>No gigs found. Create your first gig!</p>
+            <p>You haven't created any gigs yet. Create your first gig!</p>
+            <Link to="/add">
+              <button className="create-gig-btn">Create a Gig</button>
+            </Link>
           </div>
         ) : (
           <table>
@@ -85,7 +99,7 @@ function MyGigs() {
                     <div className="image-container" onClick={() => handleGigClick(gig._id)}>
                       <img 
                         className="image" 
-                        src={gig.cover} 
+                        src={gig.cover || "/img/noimage.jpg"} 
                         alt={gig.title}
                         onError={(e) => {
                           handleImageError(gig);

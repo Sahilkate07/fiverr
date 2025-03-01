@@ -19,6 +19,9 @@ import {
 } from "@tanstack/react-query";
 import Pay from "./pages/pay/Pay";
 import Success from "./pages/success/Success";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ChatBot from "./components/chatbot/ChatBot";
 
 // ErrorBoundary component
 class ErrorBoundary extends React.Component {
@@ -50,6 +53,19 @@ function App() {
           <Navbar />
           <Outlet />
           <Footer />
+          <ChatBot />
+          <ToastContainer
+            position="bottom-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
         </QueryClientProvider>
       </div>
     );
