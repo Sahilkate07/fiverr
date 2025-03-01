@@ -16,7 +16,12 @@ const CheckoutForm = () => {
   const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
-    if (!stripe) {
+    if (!stripe) return;
+
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    if (!currentUser?._id || !currentUser?.token) {
+      toast.error("Please login to proceed with payment");
+      navigate("/login");
       return;
     }
 
@@ -24,9 +29,7 @@ const CheckoutForm = () => {
       "payment_intent_client_secret"
     );
 
-    if (!clientSecret) {
-      return;
-    }
+    if (!clientSecret) return;
 
     stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
       const gigId = localStorage.getItem("gigId");
@@ -56,6 +59,13 @@ const CheckoutForm = () => {
       return;
     }
 
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    if (!currentUser?._id || !currentUser?.token) {
+      toast.error("Please login to proceed with payment");
+      navigate("/login");
+      return;
+    }
+
     setIsProcessing(true);
 
     try {
@@ -64,13 +74,27 @@ const CheckoutForm = () => {
         elements,
         confirmParams: {
           return_url: `${window.location.origin}/success?gig_id=${gigId}`,
+          payment_method_data: {
+            billing_details: {
+              email: currentUser.email,
+              name: currentUser.username
+            }
+          }
         },
         redirect: "if_required"
       });
 
       if (error) {
-        setMessage(error.message);
-        toast.error(error.message);
+        if (error.type === "validation_error") {
+          setMessage(error.message);
+          toast.error(error.message);
+        } else if (error.type === "card_error") {
+          setMessage("Your card was declined. Please try another payment method.");
+          toast.error("Your card was declined. Please try another payment method.");
+        } else {
+          setMessage("An error occurred while processing your payment.");
+          toast.error("Payment failed. Please try again.");
+        }
       } else if (paymentIntent && paymentIntent.status === "succeeded") {
         setMessage("Payment succeeded!");
         navigate(`/success?payment_intent=${paymentIntent.id}&gig_id=${gigId}`);
@@ -133,7 +157,7 @@ const CheckoutForm = () => {
         }
 
         .submit-button {
-          background: #5469d4;
+          background: #1dbf73;
           color: #ffffff;
           border-radius: 4px;
           border: 0;

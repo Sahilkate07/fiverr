@@ -24,18 +24,40 @@ const Pay = () => {
       try {
         const currentUser = JSON.parse(localStorage.getItem("currentUser"));
         
-        if (!currentUser?._id) {
+        if (!currentUser?._id || !currentUser?.token) {
+          toast.error("Please login to proceed with payment");
           localStorage.setItem("redirectAfterLogin", `/pay/${id}`);
           navigate("/login");
           return;
         }
 
-        const res = await newRequest.post(`/orders/create-payment-intent/${id}`);
+        // Set authorization header with token
+        const res = await newRequest.post(
+          `/orders/create-payment-intent/${id}`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${currentUser.token}`
+            }
+          }
+        );
+
+        if (!res.data?.clientSecret) {
+          throw new Error("Failed to initialize payment");
+        }
+
         setClientSecret(res.data.clientSecret);
         setLoading(false);
       } catch (err) {
-        setError(err.response?.data?.message || "Failed to initialize payment");
-        toast.error(err.response?.data?.message || "Failed to initialize payment. Please try again.");
+        console.error("Payment initialization error:", err);
+        const errorMessage = err.response?.data?.message || err.message || "Failed to initialize payment";
+        setError(errorMessage);
+        toast.error(errorMessage);
+        
+        if (err.response?.status === 401) {
+          localStorage.setItem("redirectAfterLogin", `/pay/${id}`);
+          navigate("/login");
+        }
         setLoading(false);
       }
     };

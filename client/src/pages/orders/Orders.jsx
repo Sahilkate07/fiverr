@@ -17,6 +17,7 @@ const Orders = () => {
     queryFn: async () => {
       try {
         const res = await newRequest.get(`/orders`);
+        console.log("Fetched orders:", res.data); // Debug log
         return res.data;
       } catch (err) {
         console.error("❌ Error fetching orders:", err.response?.data || err.message);
@@ -27,26 +28,38 @@ const Orders = () => {
 
   const handleContact = async (order) => {
     try {
-      setLoadingContact(order._id);
-      
-      // Determine the other user's ID based on whether current user is buyer or seller
-      const otherUserId = currentUser.isSeller ? order.buyerId : order.sellerId;
-      
-      if (!otherUserId) {
-        toast.error("Cannot find the other user's information.");
+      console.log("Clicked order:", order); // Debug log
+      console.log("Current user:", currentUser); // Debug log
+
+      if (!currentUser) {
+        toast.error("Please login to send messages");
+        navigate("/login");
         return;
       }
 
-      // Create or get conversation
-      const res = await newRequest.post(`/conversations`, {
-        to: otherUserId,
+      setLoadingContact(order._id);
+
+      // Get the seller ID directly from the order
+      const sellerId = order.gigId?.userId || order.sellerId;
+      console.log("Seller ID:", sellerId); // Debug log
+
+      if (!sellerId) {
+        toast.error("Could not find seller information");
+        return;
+      }
+
+      // Create a new conversation
+      const res = await newRequest.post("/conversations", {
+        to: sellerId,
         orderId: order._id
       });
+
+      console.log("Conversation response:", res.data); // Debug log
 
       if (res.data && res.data.id) {
         navigate(`/message/${res.data.id}`);
       } else {
-        toast.error("Failed to create conversation. Please try again.");
+        toast.error("Could not start conversation");
       }
 
     } catch (err) {
@@ -62,6 +75,9 @@ const Orders = () => {
       navigate(`/gig/${gigId}`);
     }
   };
+
+  // Debug log for rendered data
+  console.log("Rendering orders data:", data);
 
   return (
     <motion.div 
@@ -118,7 +134,8 @@ const Orders = () => {
                           onClick={() => handleContact(order)}
                           style={{ 
                             cursor: loadingContact === order._id ? 'wait' : 'pointer',
-                            opacity: loadingContact === order._id ? 0.6 : 1
+                            opacity: loadingContact === order._id ? 0.6 : 1,
+                            color: '#1dbf73'
                           }}
                         />
                       </motion.div>

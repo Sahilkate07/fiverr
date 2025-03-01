@@ -31,7 +31,7 @@ function Register() {
     setUser((prev) => ({ 
       ...prev, 
       isSeller: e.target.checked,
-      canBeSeller: e.target.checked // Set canBeSeller based on initial choice
+      canBeSeller: e.target.checked 
     }));
   };
 
@@ -47,19 +47,19 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate required fields
+
     if (!user.username || !user.email || !user.password || !user.country || !user.phone || !user.desc) {
       toast.error("❌ Please fill out all required fields.");
       return;
     }
 
-    // Show "Verifying Details" toast instantly
+  
     const loadingToastId = toast.loading("🔍 Verifying details...");
     
     try {
       setLoading(true);
 
-      // File upload (if a file is selected)
+  
       let imageUrl = "";
       if (file) {
         toast.update(loadingToastId, {
@@ -81,13 +81,12 @@ function Register() {
         }
       }
 
-      // Update user state with image URL
       const updatedUser = { ...user, img: imageUrl };
 
-      // Register the user
+
       await newRequest.post("/auth/register", updatedUser);
 
-      // Update toast to show success
+
       toast.update(loadingToastId, {
         render: "🎉 Account created successfully!",
         type: "success",
@@ -95,7 +94,7 @@ function Register() {
         autoClose: 3000,
       });
 
-      // Log in the user automatically
+
       const loginRes = await newRequest.post("/auth/login", {
         username: user.username,
         password: user.password,

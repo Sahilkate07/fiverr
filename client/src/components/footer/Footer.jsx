@@ -18,19 +18,19 @@ function Footer() {
           </div>
           <div className="right">
             <div className="social">
-              <a href="https://twitter.com/fiverr" target="_blank" rel="noopener noreferrer">
+              <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer">
                 <img src="/img/twitter.png" alt="Twitter" />
               </a>
-              <a href="https://facebook.com/fiverr" target="_blank" rel="noopener noreferrer">
+              <a href="https://facebook.com/" target="_blank" rel="noopener noreferrer">
                 <img src="/img/facebook.png" alt="Facebook" />
               </a>
-              <a href="https://linkedin.com/company/fiverr" target="_blank" rel="noopener noreferrer">
+              <a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer">
                 <img src="/img/linkedin.png" alt="LinkedIn" />
               </a>
-              <a href="https://pinterest.com/fiverr" target="_blank" rel="noopener noreferrer">
+              <a href="https://pinterest.com/" target="_blank" rel="noopener noreferrer">
                 <img src="/img/pinterest.png" alt="Pinterest" />
               </a>
-              <a href="https://instagram.com/fiverr" target="_blank" rel="noopener noreferrer">
+              <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer">
                 <img src="/img/instagram.png" alt="Instagram" />
               </a>
             </div>
