@@ -1,1 +1,28 @@
- 
+{
+  "name": "fiverr-api",
+  "service": {
+    "ports": [
+      {
+        "port": 8800,
+        "protocol": "http"
+      }
+    ],
+    "routes": [
+      {
+        "path": "/",
+        "port": 8800
+      }
+    ],
+    "env": {
+      "NODE_ENV": "production"
+    },
+    "commands": {
+      "build": "cd api && npm install",
+      "run": "cd api && npm start"
+    },
+    "healthcheck": {
+      "port": 8800,
+      "path": "/health"
+    }
+  }
+} 
